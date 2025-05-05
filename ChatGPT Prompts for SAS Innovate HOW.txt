@@ -1,0 +1,66 @@
+ChatGPT Prompts for SAS Innovate HOW
+
+Use: https://openai.com/chatgpt/
+Chat to follow: https://chatgpt.com/share/6818c39a-bf8c-8006-8492-3bc6cef76163
+
+I have a question about assigning SAS libraries. Instead of writing out the full path to a library, such as libname HHS "/home/student/HHS_OTJ", how can I use a ~ to shorten the path?  And what exactly does the ~ do?
+
+Thanks! I’d now like to write some SAS code that will help me download a .CSV file from a GitHub page. The data file is found here: https://github.com/lincolngroves/SAS-OTJ-HHS/blob/main/ACS_2015_2022_ltd.csv. Can you please help me write this code?
+
+That code looks like it worked – but the proc http step has an error.  Can you write me some new code that doesn’t use proc http? Additionally, can you just print the first 100 observations? Thanks!
+
+I'd like to better understand my new SAS data set HHS.HHS_OTJ_Raw. Can you help me write some SAS code which summarizes all the numeric and non-numeric variables in the dataset? Bonus points for graphs - and thanks!
+
+For step 3 and step 4, I'm getting the error message that _numeric_ and _character_ are not found.  Can you write that code another way?
+
+Hmmm.  That code is very complex.  Let's try again.  Can you add plots to the proc univariate and proc freq statements to produce graphs for the numeric and non-numeric variables, respectively?
+
+I’m struggling to understand some complex proc SQL code in SAS. Allegedly, this code takes a very long data set and collapses the data to a much small number of observations, while creating a bunch of new variables. Can you help explain it to me like I’m a 10 year old? Here is the code: 
+********************************************************  By State ;
+proc sql;
+	create 	table hhs.covid_labor_supply as 
+	select	distinct state_fip, state_name, 
+            year(yearquarter) as Year format 9.,
+			
+/*******************************************************************  Labor Force Status | All  */
+			sum( ( unemp=1 ) * WTFINL ) 											/ sum( ( in_LF=1 ) *   	WTFINL )									as UE_Women				label="Unemployment Rate"	format percent9.1 		,
+			sum( ( in_LF=1 ) * WTFINL ) 											/ sum(  				WTFINL )									as LFP_Women			label="LFP Rate"			format percent9.1 		,
+
+
+/*******************************************************************  Labor Force Status | By Education  */
+
+			/*******************************************************  Unemployment */
+			sum( ( educ_ltd="High School Diploma" ) * ( unemp=1 ) * WTFINL ) 		/ sum( ( educ_ltd="High School Diploma" ) * ( in_LF=1 ) * WTFINL )	as UE_Women_HS			label="EDUC <= HS" 		format percent9.1 		,
+			sum( ( educ_ltd="Some College" ) * ( unemp=1 ) * WTFINL ) 				/ sum( ( educ_ltd="Some College" ) * ( in_LF=1 ) * WTFINL ) 		as UE_Women_SCollege	label="Some College"	format percent9.1 		,
+			sum( ( educ_ltd="College +" ) * ( unemp=1 ) * WTFINL ) 					/ sum( ( educ_ltd="College +" ) * ( in_LF=1 ) * WTFINL ) 			as UE_Women_CollegeP	label="College +" 		format percent9.1 		,
+
+			/*******************************************************  LFP */
+			sum( ( educ_ltd="High School Diploma" ) * ( in_LF=1 ) * WTFINL ) 		/ sum( ( educ_ltd="High School Diploma" ) * WTFINL ) 				as LFP_Women_HS			label="EDUC <= HS" 		format percent9.1 		,
+			sum( ( educ_ltd="Some College" ) * ( in_LF=1 ) * WTFINL ) 				/ sum( ( educ_ltd="Some College" ) * WTFINL ) 						as LFP_Women_SCollege	label="Some College" 	format percent9.1 		,
+			sum( ( educ_ltd="College +" ) * ( in_LF=1 ) * WTFINL ) 					/ sum( ( educ_ltd="College +" ) * WTFINL ) 							as LFP_Women_CollegeP	label="College +" 		format percent9.1 		,
+
+
+/*******************************************************************  Labor Force Status | By Child Status  */
+
+			/*******************************************************  Unemployment */
+			sum( ( child_status="No Children" ) * ( unemp=1 ) * WTFINL ) 			/ sum( ( child_status="No Children" ) * ( in_LF=1 ) * WTFINL ) 		as UE_Women_NoKids		label="No Children" 	format percent9.1 		,
+			sum( ( child_status="Older Children" ) * ( unemp=1 ) * WTFINL ) 		/ sum( ( child_status="Older Children" ) * ( in_LF=1 ) * WTFINL ) 	as UE_Women_OlderKids	label="Older Children" 	format percent9.1 		,
+			sum( ( child_status="Child < 5" ) * ( unemp=1 ) * WTFINL ) 				/ sum( ( child_status="Child < 5" ) * ( in_LF=1 ) * WTFINL ) 		as UE_Women_YoungKids	label="Young Children"	format percent9.1 		,
+
+			/*******************************************************  LFP */
+			sum( ( child_status="No Children" ) * ( in_LF=1 ) * WTFINL ) 			/ sum( ( child_status="No Children" ) * WTFINL ) 					as LFP_Women_NoKids		label="No Children" 	format percent9.1 		,
+			sum( ( child_status="Older Children" ) * ( in_LF=1 ) * WTFINL ) 		/ sum( ( child_status="Older Children" ) * WTFINL ) 				as LFP_Women_OlderKids	label="Older Children" 	format percent9.1 		,
+			sum( ( child_status="Child < 5" ) * ( in_LF=1 ) * WTFINL ) 				/ sum( ( child_status="Child < 5" ) * WTFINL ) 						as LFP_Women_YoungKids	label="Young Children"	format percent9.1 		
+
+
+	from 	hhs.hhs_otj_raw
+	group	by 1,2,3 
+	order	by 1,2,3 ;
+quit;
+
+
+Can you please create a SAS program that creates a nice summary table of the new variables in the hhs.covid_labor_supply data set?
+
+Alright, one more trick. Can you please help me write some SAS code that will use the hhs.covid_labor_supply data set and examine UE_Women, UE_Women_NoKids, UE_Women_OlderKids, and UE_Women_YoungKids by state over time? The time variable is year and the state variable is named state_name. Thank you!
+
+I don't actually see that the code you provided grouped the data by state_name. Can you please try again and create new code which produces separate graphs for each state? Thank you!
